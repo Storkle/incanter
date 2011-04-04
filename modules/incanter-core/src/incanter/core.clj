@@ -1100,7 +1100,7 @@
             view))
 
 "
-  ([mat on-cols & {:keys [cols except-cols]}] (println "HI")
+  ([mat on-cols & {:keys [cols except-cols]}] 
     (let [groups (if (coll? on-cols)
                    (into #{} (to-list (sel mat :cols on-cols)))
                    (sort (into #{} (to-list (sel mat :cols on-cols)))))
