@@ -50,10 +50,15 @@
            (javax.swing JTable JScrollPane JFrame)
            (java.util Vector)))
 
-
+ 
  (def ^{:doc "This variable is bound to a dataset when the with-data macro is used.
               functions like $ and $where can use $data as a default argument."} 
-      $data)
+      $data nil)
+
+(defn data!
+  "set $data global variable"
+  [dat]
+  (alter-var-root #'$data (constantly dat)))
 
 (defrecord Dataset [column-names rows])
 (derive incanter.core.Dataset ::dataset)
@@ -290,7 +295,7 @@
                 cols cols
                 except-cols (except-for (.columns mat) except-cols)
                 :else true)
-         mat (if (nil? filter) mat (matrix (filter filter mat)))
+         mat (if (nil? filter) mat (matrix (clojure.core/filter filter mat)))
          all-rows? (or (true? rows) (= rows :all))
          all-cols? (or (true? cols) (= cols :all))]
      (cond
@@ -1095,7 +1100,7 @@
             view))
 
 "
-  ([mat on-cols & {:keys [cols except-cols]}]
+  ([mat on-cols & {:keys [cols except-cols]}] (println "HI")
     (let [groups (if (coll? on-cols)
                    (into #{} (to-list (sel mat :cols on-cols)))
                    (sort (into #{} (to-list (sel mat :cols on-cols)))))
